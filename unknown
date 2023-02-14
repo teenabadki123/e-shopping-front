@@ -1,0 +1,9 @@
+pipeline {
+   agent any
+   stages {
+    stage ('PULL'){
+        steps {
+           git branch: 'main', credentialsId: 'github', url: 'git@github.com:teenabadki123/e-shopping-front.git'
+           sh 'ls'
+        }
+    }
