@@ -1,20 +1,32 @@
 pipeline {
-   agent any
-   stages {
-    stage ('PULL'){
-        steps {
-           git branch: 'main', credentialsId: 'github', url: 'git@github.com:teenabadki123/e-shopping-front.git'
-        }
-    }
-    stage('Build') { 
-        steps {
-            sh '''
-            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-            sudo apt install nodejs
-            node --version
-            npm --version
-            '''
+    agent any 
+    stages {
+        stage('PULL') { 
+            steps {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/cloud-blitz/ecom-microfrontend.git'
             }
         }
-   }
+        stage('Build') { 
+            steps {
+                sh '''
+                sudo apt update
+                sudo apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates
+                curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
+                sudo apt-get install -y nodejs
+                sudo apt -y install gcc g++ make
+                sudo npm i @angular/cli@10.1.0
+                sudo npm i @angular/cli
+                sudo npm i ng-cli
+                sudo npm install
+                '''
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                sh '''
+                sudo aws s3 ls s3://bucket-jenkins/ --recursive --region us-east-1
+                '''
+            }
+        }
+    }
 }
